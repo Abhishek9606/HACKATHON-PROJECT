@@ -1,0 +1,86 @@
+function loadDisaster(){
+
+let disaster = document.getElementById("disaster").value
+
+let steps = {
+
+Earthquake:[
+{
+text:" Step 1 - Drop to the ground",
+img:"https://www.earthquakecountry.org/library/DCHo_A_Drop_EN_BlueOrange_RGB.png"
+},
+{
+text:" Step 2 - Take cover under sturdy furniture",
+img:"https://www.wikihow.com/images/thumb/9/9d/Survive-an-Earthquake-Step-2-Version-2.jpg/v4-460px-Survive-an-Earthquake-Step-2-Version-2.jpg"
+},
+{
+text:" Step 3 - Hold until shaking stops",
+img:"https://www.earthquakecountry.org/library/HoldOn_ENG_Blue_Orange.png"
+}
+],
+
+Fire:[
+{
+text:"Activate fire alarm",
+img:"https://cdn-icons-png.flaticon.com/512/1046/1046784.png"
+},
+{
+text:"Use fire extinguisher",
+img:"https://cdn-icons-png.flaticon.com/512/4320/4320337.png"
+},
+{
+text:"Evacuate building immediately",
+img:"https://cdn-icons-png.flaticon.com/512/3062/3062634.png"
+}
+],
+
+Flood:[
+{
+text:"Move to higher ground",
+img:"https://cdn-icons-png.flaticon.com/512/4814/4814473.png"
+},
+{
+text:"Avoid walking through flood water",
+img:"https://cdn-icons-png.flaticon.com/512/252/252035.png"
+},
+{
+text:"Follow evacuation instructions",
+img:"https://cdn-icons-png.flaticon.com/512/3209/3209265.png"
+}
+],
+
+Cyclone:[
+{
+text:"Stay indoors and secure windows",
+img:"https://cdn-icons-png.flaticon.com/512/1116/1116453.png"
+},
+{
+text:"Avoid power lines and trees",
+img:"https://cdn-icons-png.flaticon.com/512/4149/4149670.png"
+},
+{
+text:"Follow emergency alerts",
+img:"https://cdn-icons-png.flaticon.com/512/1827/1827349.png"
+}
+]
+
+}
+
+let guide = document.getElementById("guide")
+guide.innerHTML=""
+
+steps[disaster].forEach(step=>{
+
+let div=document.createElement("div")
+div.className="step"
+
+div.innerHTML=`
+<img src="${step.img}">
+<p>${step.text}</p>
+`
+
+guide.appendChild(div)
+
+})
+
+}

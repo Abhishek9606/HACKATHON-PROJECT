@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SafeCampus</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f4f6f8;
+margin:0;
+padding:0;
+}
+
+.container{
+width:80%;
+margin:auto;
+margin-top:30px;
+}
+
+.card{
+background:white;
+padding:20px;
+margin-bottom:20px;
+border-radius:8px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+button{
+padding:10px 15px;
+background:#007bff;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+.step{
+margin-top:15px;
+}
+
+.step img{
+width:200px;
+display:block;
+margin-bottom:5px;
+border-radius:5px;
+}
+
+pre{
+background:#eee;
+padding:10px;
+border-radius:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+
+    
+
+<div class="container">
+
+<div class="card">
+
+<h2>🚨 Panic Button</h2>
+
+<button onclick="panicMode()" style="background:red;font-size:18px;padding:15px;">
+PANIC
+</button>
+
+</div>
+
+
+
+
+
+<h1>SafeCampus Disaster Preparedness</h1>
+
+<!-- Disaster Selection -->
+<div class="card">
+
+<h2>Select Disaster</h2>
+
+<select id="disaster">
+<option>Earthquake</option>
+<option>Fire</option>
+<option>Flood</option>
+<option>Cyclone</option>
+</select>
+
+<button onclick="loadDisaster()">View Safety Guide</button>
+
+</div>
+
+
+
+
+
+
+
+
+<div class="card">
+
+<h2>Select Situation</h2>
+
+<select id="situation">
+<option>Indoor</option>
+<option>Outdoor</option>
+</select>
+
+<button onclick="loadGuide()">Show Guide</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>Emergency Evacuation</h2>
+
+<p>Find the nearest safe place</p>
+
+<select id="safePlace">
+<option value="hospital">Nearest Hospital</option>
+<option value="police station">Police Station</option>
+<option value="fire station">Fire Station</option>
+</select>
+
+<br><br>
+
+<button onclick="findSafeRoute()">Find Safe Route</button>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- Visual Guide -->
+<div class="card">
+
+<h2>Safety Guide</h2>
+
+<div id="guide">
+<p>Select a disaster to see safety instructions</p>
+</div>
+
+</div>
+
+
+<!-- Preparedness Checklist -->
+<div class="card">
+
+<h2>Preparedness Checklist</h2>
+
+<label><input type="checkbox" class="check"> Know evacuation route</label><br>
+<label><input type="checkbox" class="check"> Know extinguisher location</label><br>
+<label><input type="checkbox" class="check"> Emergency numbers saved</label><br>
+<label><input type="checkbox" class="check"> First aid kit available</label><br>
+
+<br>
+
+<button onclick="calculate()">Calculate Preparedness</button>
+
+<p id="score"></p>
+
+</div>
+
+<div class="card">
+
+<h2>Emergency Contacts</h2>
+
+<button onclick="callNumber('100')">🚓 Call Police</button>
+
+<button onclick="callNumber('101')">🔥 Call Fire Dept</button>
+
+<button onclick="callNumber('102')">🚑 Call Ambulance</button>
+
+</div>
+
+
+
+<!-- JSON Output -->
+<div class="card">
+
+<h2>System Output (JSON)</h2>
+
+<pre id="json"></pre>
+
+</div>
+
+</div>
+
+
+<script>
+
+function findSafeRoute(){
+
+if (!navigator.geolocation){
+alert("Geolocation not supported")
+return
+}
+
+navigator.geolocation.getCurrentPosition(function(position){
+
+let lat = position.coords.latitude
+let lon = position.coords.longitude
+
+let destination = document.getElementById("safePlace").value
+
+let mapsURL = `https://www.google.com/maps/dir/${lat},${lon}/${destination}`
+
+window.open(mapsURL, "_blank")
+document.getElementById("status").innerText = "Finding nearest safe location..."
+
+},
+function(){
+alert("Location access denied")
+})
+
+}
+
+
+function callNumber(num){
+window.location.href = "tel:" + num
+}
+
+
+
+function panicMode(){
+
+alert("Emergency mode activated!")
+
+navigator.geolocation.getCurrentPosition(function(position){
+
+let lat = position.coords.latitude
+let lon = position.coords.longitude
+
+// open safe route
+let mapsURL = `https://www.google.com/maps/search/hospital/@${lat},${lon},15z`
+window.open(mapsURL,"_blank")
+
+})
+
+// call ambulance
+window.location.href="tel:102"
+
+}
+
+
+
+
+
+
+
+
+
+function loadGuide(){
+
+let disaster = document.getElementById("disaster").value
+let situation = document.getElementById("situation").value
+
+let data = {
+
+Earthquake:{
+
+Indoor:[
+{
+text:"Step 1 - Drop to the ground",
+img:"https://www.earthquakecountry.org/library/DCHo_A_Drop_EN_BlueOrange_RGB.png"
+},
+{
+text:"Step 2 - Take cover under table",
+img:"https://www.wikihow.com/images/thumb/9/9d/Survive-an-Earthquake-Step-2-Version-2.jpg/v4-460px-Survive-an-Earthquake-Step-2-Version-2.jpg"
+},
+{
+text:"Step 3 - Hold until shaking stops",
+img:"https://www.earthquakecountry.org/library/HoldOn_ENG_Blue_Orange.png"
+}
+],
+
+Outdoor:[
+{
+text:"Step 1 - Move to open area",
+img:"https://static.vecteezy.com/system/resources/previews/049/694/206/large_2x/earthquake-evacuation-illustration-png.png"
+},
+{
+text:"Step 2 - Stay away from buildings",
+img:"https://www.shutterstock.com/image-vector/earthquake-emergency-safety-rules-instruction-260nw-2307883365.jpg"
+},
+{
+text:"Step 3 - Protect your head",
+img:"https://www.shutterstock.com/image-vector/isolated-pictogram-person-crouching-under-600nw-2635422491.jpg"
+}
+]
+
+},
+
+Fire:{
+
+Indoor:[
+{
+text:"Step 1 - Activate fire alarm",
+img:"https://www.wikihow.life/images/thumb/1/1b/Activate-a-Fire-Alarm-Step-11.jpg/aid390893-v4-728px-Activate-a-Fire-Alarm-Step-11.jpg"
+},
+{
+text:"Step 2  - Use fire extinguisher if safe",
+img:"https://praxis42.com/wp-content/uploads/2023/05/PASS-fire-extinguisher-infographic-hsowing-how-to-use-a-fire-extinguisher-e1728392453252-655x521.jpg"
+},
+{
+text:"Step 3 - Evacuate through nearest exit",
+img:"https://static.vecteezy.com/system/resources/previews/008/146/828/original/emergency-evacuation-sign-fire-exit-man-run-toward-exit-door-from-fire-red-signboard-illustration-vector.jpg"
+}
+],
+
+Outdoor:[
+{
+text:"Step 1 - Move away from burning building",
+img:"https://as2.ftcdn.net/v2/jpg/05/45/59/81/1000_F_545598117_M6k4v4M5PphBPmgd3mkswy31EMBRoOui.jpg"
+},
+{
+text:"Step 2 - Call emergency services",
+img:"https://thumbs.dreamstime.com/b/fire-truck-service-urgent-station-emergency-call-concept-177069262.jpg"
+}
+]
+
+},
+
+Flood:{
+
+Indoor:[
+{
+text:"Step 1 - Move to higher floor",
+img:"https://www.aces.edu/wp-content/uploads/2018/11/ThinkstockPhotos-178593555.jpg"
+},
+{
+text:"Step 2 -Turn off electricity",
+img:"https://static.vecteezy.com/system/resources/previews/021/241/616/large_2x/man-uses-breaker-to-turn-off-electricity-or-stop-internet-connection-png.png"
+}
+],
+
+Outdoor:[
+{
+text:"Step 1 - Move to higher ground",
+img:"https://www.shutterstock.com/image-vector/relocate-higher-ground-flood-safety-260nw-2304519177.jpg"
+},
+{
+text:"Step 2 - Avoid walking in water",
+img:"https://thumbs.dreamstime.com/b/man-flood-cartoon-suit-stands-waters-looks-swamped-stop-sign-64639080.jpg"
+}
+]
+
+},
+
+Cyclone:{
+
+Indoor:[
+{
+text:"Step 1 - Stay inside strong building",
+img:"https://d.newsweek.com/en/full/428300/03-04-woodbuildings-01.jpg"
+},
+{
+text:"Step 2 - Stay away from windows",
+img:"https://icon-library.com/images/escape-icon/escape-icon-11.jpg"
+}
+],
+
+Outdoor:[
+{
+text:"Step 1 - Find shelter immediately",
+img:"https://www.smartsign.com/img/lg/K/Emergency-Shelter-Up-Sign-K-9398-U.gif"
+},
+{
+text:"Step 2 - Avoid power lines and trees",
+img:"https://northwesternenergy.com/images/default-source/630x400-standard-image-callouts/630x400-tree-maintenance-02-01.jpg"
+}
+]
+
+}
+
+}
+
+let guide = document.getElementById("guide")
+guide.innerHTML=""
+
+let steps = data[disaster][situation]
+
+steps.forEach(step => {
+
+let div = document.createElement("div")
+div.className = "step"
+
+div.innerHTML = `
+<img src="${step.img}" width="200">
+<p>${step.text}</p>
+`
+
+guide.appendChild(div)
+
+})
+
+}
+
+function calculate(){
+
+let checks=document.querySelectorAll(".check")
+let score=0
+
+checks.forEach(c=>{
+if(c.checked) score++
+})
+
+document.getElementById("score").innerText=
+"Preparedness Score: "+score+"/4"
+
+let disaster=document.getElementById("disaster").value
+
+let output={
+disaster_type:disaster.toUpperCase(),
+preparedness_score:score,
+safety_actions:["Step1","Step2","Step3"],
+emergency_contacts:["Police","Fire Department","Ambulance"],
+status: score>=3?"Prepared":"Needs Improvement"
+}
+
+document.getElementById("json").innerText=
+JSON.stringify(output,null,2)
+
+}
+
+</script>
+
+</body>
+</html>
